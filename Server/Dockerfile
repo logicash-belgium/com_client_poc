@@ -13,4 +13,4 @@ RUN npm install --production
 COPY src/ .
 
 #CMD [ "node", "server.js" ]
-CMD [ "npm", "start" ]
+CMD [ "npm", "dockerstart" ]
