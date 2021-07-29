@@ -2,9 +2,9 @@
   "name": "com_server",
   "version": "1.0.0",
   "description": "A com port server for demo purposes",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
