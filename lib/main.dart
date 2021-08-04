@@ -1,11 +1,36 @@
 import 'package:com_client/com_connector_component_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(MyApp());
+// flutter [run/build] --dart-define=API_PORT
+Future main() async {
+  String portString = "";
+  int defaultPort = 5000;
+  try {
+    await dotenv
+    // old syntax before 5.0.0
+    //await DotEnv()
+        .load();//fileName: ".env"); // may take a fileName = "whatever.env" or just assume ".env"
+    portString = (dotenv.env['PORT'])!;
+    // old syntax before 5.0.0
+    //portString = (DotEnv().env['PORT'])!;
+    // ignore: non_constant_identifier_names
+    int? ENV_API_PORT = int.tryParse(portString); // parse raises an exception tryParse returns a null, when appropriate.
+    // ignore: non_constant_identifier_names
+    final API_PORT = int.fromEnvironment('API_PORT', defaultValue: ENV_API_PORT ?? defaultPort);
+    runApp(MyApp(port: API_PORT));
+  } catch (e, stackTrace) {
+    debugPrint(e.toString());
+    print(stackTrace);
+    print("In case no env was passed on commandline, $defaultPort will be used for the port");
+  }
 }
 
 class MyApp extends StatelessWidget {
+
+  MyApp({Key? key, required this.port}) : super(key: key);
+
+  late final int port;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -23,7 +48,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page on $port'),
     );
   }
 }
@@ -47,18 +72,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
